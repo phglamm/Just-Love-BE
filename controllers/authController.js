@@ -1,6 +1,3 @@
-const mongoose = require("mongoose");
-const crypto = require("crypto");
-const transporter = require("../config/nodemailer");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -10,10 +7,12 @@ exports.register = async (req, res) => {
     const { username } = req.body;
     const existingUser = await User.findOne({ username });
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+      return res
+        .status(400)
+        .json({ message: "User already exists", status: 400 });
     }
 
-    const newUser = await user.create(req.body);
+    const newUser = await User.create(req.body);
     const responseUser = {
       _id: newUser._id,
       username: newUser.username,
@@ -23,7 +22,8 @@ exports.register = async (req, res) => {
     };
     res.status(201).json({
       message: "User registered successfully.",
-      responseUser,
+      data: responseUser,
+      status: 201,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
