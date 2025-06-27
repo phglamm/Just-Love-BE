@@ -2,13 +2,13 @@ const mongoose = require("mongoose");
 const crypto = require("crypto");
 const transporter = require("../config/nodemailer");
 const jwt = require("jsonwebtoken");
-const user = require("../models/User");
+const User = require("../models/User");
 const JWT_SECRET = process.env.JWT_SECRET;
 
 exports.register = async (req, res) => {
   try {
     const { username } = req.body;
-    const existingUser = await user.findOne({ username });
+    const existingUser = await User.findOne({ username });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
@@ -33,14 +33,18 @@ exports.login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    const userLogin = await user.findOne({ username });
-    if (!user) {
-      return res.status(404).json({ message: "Invalid Credentials" });
+    const userLogin = await User.findOne({ username });
+    if (!User) {
+      return res
+        .status(404)
+        .json({ message: "Invalid Credentials", status: 404 });
     }
 
     const isMatch = await userLogin.comparePassword(password);
     if (!isMatch) {
-      return res.status(404).json({ message: "Invalid Credentials" });
+      return res
+        .status(404)
+        .json({ message: "Invalid Credentials", status: 404 });
     }
 
     const responseUser = {
@@ -57,8 +61,15 @@ exports.login = async (req, res) => {
       expiresIn: "2h",
     });
 
-    res.status(200).json({ accessToken: token, user: responseUser });
+    res.status(200).json({
+      status: 200,
+      message: "Login successful",
+      data: {
+        accessToken: token,
+        user: responseUser,
+      },
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message, status: 500 });
   }
 };
