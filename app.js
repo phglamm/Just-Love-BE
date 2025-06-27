@@ -6,6 +6,8 @@ var logger = require("morgan");
 const connectDb = require("./config/database");
 const cors = require("cors");
 const authRouter = require("./routes/authRouter");
+const bookingRouter = require("./routes/bookingRouter");
+const memoryRouter = require("./routes/memoryRouter");
 var app = express();
 
 connectDb();
@@ -22,6 +24,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api/auth", authRouter);
+app.use("/api/booking", bookingRouter);
+app.use("/api/memory", memoryRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

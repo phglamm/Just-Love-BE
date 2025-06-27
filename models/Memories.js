@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const MemorySchem = mongoose.Schema(
+const MemorySchema = mongoose.Schema(
   {
     name: {
       type: String,
@@ -14,8 +14,13 @@ const MemorySchem = mongoose.Schema(
       type: String,
       required: false,
     },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Memories", MemorySchem);
+module.exports = mongoose.model("Memories", MemorySchema);
