@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const crypto = require("crypto");
 const transporter = require("../config/nodemailer");
 const jwt = require("jsonwebtoken");
-const user = require("../models/user");
+const user = require("../models/User");
 const JWT_SECRET = process.env.JWT_SECRET;
 
 exports.register = async (req, res) => {
